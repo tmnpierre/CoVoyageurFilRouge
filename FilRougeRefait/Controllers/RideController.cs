@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CoVoyageur.API.DTOs;
+using AutoMapper;
 using CoVoyageur.API.Data;
+using CoVoyageur.Core.Models;
+using NuGet.Protocol.Core.Types;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
+using CoVoyageur.API.Repositories.Interfaces;
 
 namespace CoVoyageur.API.Controllers
 {
@@ -14,111 +16,67 @@ namespace CoVoyageur.API.Controllers
     [ApiController]
     public class RideController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IRepository<Ride> _repository;
+        private readonly IMapper _mapper;
 
-        public RideController(ApplicationDbContext context)
+        public RideController(IRepository<Ride> repository,
+                                IMapper mapper)
         {
-            _context = context;
+            _repository = repository;
+            _mapper = mapper;
         }
 
-        // GET: api/RideDTOes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<RideDTO>>> GetRideDTO()
+        public async Task<IActionResult> GetAll()
         {
-          if (_context.RideDTO == null)
-          {
-              return NotFound();
-          }
-            return await _context.RideDTO.ToListAsync();
+            IEnumerable<Ride> rides = await _repository.GetAll();
+            IEnumerable<RideDTO> ridesDTO = _mapper.Map<IEnumerable<RideDTO>>(rides)!;
+            return Ok(ridesDTO);
         }
 
-        // GET: api/RideDTOes/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<RideDTO>> GetRideDTO(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-          if (_context.RideDTO == null)
-          {
-              return NotFound();
-          }
-            var rideDTO = await _context.RideDTO.FindAsync(id);
+            var ride = await _repository.GetById(id);
+            if (ride == null)
+                return NotFound(new { Message = "There is no Ride with this Id." });
 
-            if (rideDTO == null)
-            {
-                return NotFound();
-            }
-
-            return rideDTO;
+            RideDTO rideDTO = _mapper.Map<RideDTO>(ride)!;
+            return Ok(new { Message = "Ride found.", Ride = rideDTO });
         }
 
-        // PUT: api/RideDTOes/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRideDTO(int id, RideDTO rideDTO)
+        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] RideDTO rideDTO)
         {
-            if (id != rideDTO.ID)
-            {
-                return BadRequest();
-            }
+            var rideFromDb = await _repository.GetById(id);
+            if (rideFromDb == null)
+                return NotFound("There is no Ride with this Id.");
 
-            _context.Entry(rideDTO).State = EntityState.Modified;
+            rideDTO.ID = id;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!RideDTOExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            var ride = _mapper.Map<Ride>(rideDTO)!;
+            var rideUpdated = await _repository.Update(ride);
+            var rideUpdatedDTO = _mapper.Map<RideDTO>(rideUpdated);
 
-            return NoContent();
+            return (rideUpdated != null) ? Ok(new { Message = "Ride Updated.", Ride = rideUpdatedDTO }) : BadRequest("Something went wrong...");
         }
 
-        // POST: api/RideDTOes
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<RideDTO>> PostRideDTO(RideDTO rideDTO)
+        public async Task<IActionResult> Post([FromBody] RideDTO rideDTO)
         {
-          if (_context.RideDTO == null)
-          {
-              return Problem("Entity set 'FilRougeRefaitContext.RideDTO'  is null.");
-          }
-            _context.RideDTO.Add(rideDTO);
-            await _context.SaveChangesAsync();
+            var ride = _mapper.Map<Ride>(rideDTO)!;
+            var rideAdded = await _repository.Add(ride);
+            var rideAddedDTO = _mapper.Map<RideDTO>(rideAdded)!;
 
-            return CreatedAtAction("GetRideDTO", new { id = rideDTO.ID }, rideDTO);
+            return (rideAdded != null) ? CreatedAtAction(nameof(GetById), new { id = rideAddedDTO.ID }, new { Message = "Ride Added.", Ride = rideAddedDTO }) : BadRequest("Something went wrong...");
         }
 
-        // DELETE: api/RideDTOes/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteRideDTO(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (_context.RideDTO == null)
-            {
-                return NotFound();
-            }
-            var rideDTO = await _context.RideDTO.FindAsync(id);
-            if (rideDTO == null)
-            {
-                return NotFound();
-            }
-
-            _context.RideDTO.Remove(rideDTO);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return (await _repository.Delete(id)) ? Ok("ok : ride deleted") : BadRequest();
         }
 
-        private bool RideDTOExists(int id)
-        {
-            return (_context.RideDTO?.Any(e => e.ID == id)).GetValueOrDefault();
-        }
+
     }
 }

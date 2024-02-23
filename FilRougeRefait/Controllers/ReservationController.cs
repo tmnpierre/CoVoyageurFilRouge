@@ -1,7 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CoVoyageur.API.DTOs;
+using AutoMapper;
 using CoVoyageur.API.Data;
+using CoVoyageur.Core.Models;
+using NuGet.Protocol.Core.Types;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
+using CoVoyageur.API.Repositories.Interfaces;
 
 namespace CoVoyageur.API.Controllers
 {
@@ -9,111 +16,67 @@ namespace CoVoyageur.API.Controllers
     [ApiController]
     public class ReservationController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IRepository<Reservation> _repository;
+        private readonly IMapper _mapper;
 
-        public ReservationController(ApplicationDbContext context)
+        public ReservationController(IRepository<Reservation> repository,
+                                IMapper mapper)
         {
-            _context = context;
+            _repository = repository;
+            _mapper = mapper;
         }
 
-        // GET: api/ReservationDTOes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ReservationDTO>>> GetReservationDTO()
+        public async Task<IActionResult> GetAll()
         {
-          if (_context.ReservationDTO == null)
-          {
-              return NotFound();
-          }
-            return await _context.ReservationDTO.ToListAsync();
+            IEnumerable<Reservation> reservations = await _repository.GetAll();
+            IEnumerable<ReservationDTO> reservationsDTO = _mapper.Map<IEnumerable<ReservationDTO>>(reservations)!;
+            return Ok(reservationsDTO);
         }
 
-        // GET: api/ReservationDTOes/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ReservationDTO>> GetReservationDTO(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-          if (_context.ReservationDTO == null)
-          {
-              return NotFound();
-          }
-            var reservationDTO = await _context.ReservationDTO.FindAsync(id);
+            var reservation = await _repository.GetById(id);
+            if (reservation == null)
+                return NotFound(new { Message = "There is no Reservation with this Id." });
 
-            if (reservationDTO == null)
-            {
-                return NotFound();
-            }
-
-            return reservationDTO;
+            ReservationDTO reservationDTO = _mapper.Map<ReservationDTO>(reservation)!;
+            return Ok(new { Message = "Reservation found.", Reservation = reservationDTO });
         }
 
-        // PUT: api/ReservationDTOes/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutReservationDTO(int id, ReservationDTO reservationDTO)
+        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] ReservationDTO reservationDTO)
         {
-            if (id != reservationDTO.ID)
-            {
-                return BadRequest();
-            }
+            var reservationFromDb = await _repository.GetById(id);
+            if (reservationFromDb == null)
+                return NotFound("There is no Reservation with this Id.");
 
-            _context.Entry(reservationDTO).State = EntityState.Modified;
+            reservationDTO.ID = id;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ReservationDTOExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            var reservation = _mapper.Map<Reservation>(reservationDTO)!;
+            var reservationUpdated = await _repository.Update(reservation);
+            var reservationUpdatedDTO = _mapper.Map<ReservationDTO>(reservationUpdated);
 
-            return NoContent();
+            return (reservationUpdated != null) ? Ok(new { Message = "Reservation Updated.", Reservation = reservationUpdatedDTO }) : BadRequest("Something went wrong...");
         }
 
-        // POST: api/ReservationDTOes
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ReservationDTO>> PostReservationDTO(ReservationDTO reservationDTO)
+        public async Task<IActionResult> Post([FromBody] ReservationDTO reservationDTO)
         {
-          if (_context.ReservationDTO == null)
-          {
-              return Problem("Entity set 'FilRougeRefaitContext.ReservationDTO'  is null.");
-          }
-            _context.ReservationDTO.Add(reservationDTO);
-            await _context.SaveChangesAsync();
+            var reservation = _mapper.Map<Reservation>(reservationDTO)!;
+            var reservationAdded = await _repository.Add(reservation);
+            var reservationAddedDTO = _mapper.Map<ReservationDTO>(reservationAdded)!;
 
-            return CreatedAtAction("GetReservationDTO", new { id = reservationDTO.ID }, reservationDTO);
+            return (reservationAdded != null) ? CreatedAtAction(nameof(GetById), new { id = reservationAddedDTO.ID }, new { Message = "Reservation Added.", Reservation = reservationAddedDTO }) : BadRequest("Something went wrong...");
         }
 
-        // DELETE: api/ReservationDTOes/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteReservationDTO(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (_context.ReservationDTO == null)
-            {
-                return NotFound();
-            }
-            var reservationDTO = await _context.ReservationDTO.FindAsync(id);
-            if (reservationDTO == null)
-            {
-                return NotFound();
-            }
-
-            _context.ReservationDTO.Remove(reservationDTO);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return (await _repository.Delete(id)) ? Ok("ok : reservation deleted") : BadRequest();
         }
 
-        private bool ReservationDTOExists(int id)
-        {
-            return (_context.ReservationDTO?.Any(e => e.ID == id)).GetValueOrDefault();
-        }
+
     }
 }
