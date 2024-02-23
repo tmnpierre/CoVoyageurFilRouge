@@ -29,3 +29,4 @@ namespace CoVoyageur.API.DTOs
         public DateTime DateHour { get; set; }
     }
 }
+
