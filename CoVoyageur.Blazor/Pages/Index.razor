@@ -56,6 +56,19 @@
         width: 2.5rem;
         text-align: center;
     }
+
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        background-color: white;
+        min-width: 100px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+
+        .dropdown-menu.show {
+            display: block;
+        }
 </style>
 
 <div class="search-bar px-3 py-2 d-flex align-items-center">
@@ -75,24 +88,39 @@
         <span class="input-group-text">
             <i class="fa fa-calendar-alt"></i>
         </span>
-        <input type="date" class="form-control" aria-label="Date du voyage">
+        <input type="text" class="form-control" placeholder="jj/mm/aaaa" aria-label="Date du voyage">
     </div>
     <div class="input-group mr-2">
         <span class="input-group-text">
             <i class="fa fa-user"></i>
         </span>
-        <select class="custom-select" aria-label="Nombre de personnes">
-            <option selected>1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-        </select>
+        <div class="dropdown">
+            <button class="btn secondary-btn" @onclick="ToggleDropdownMenu">Nombre de personnes</button>
+            <div class="dropdown-menu @dropdownClass">
+                @for (int i = 1; i <= 8; i++)
+                {
+                    <button @onclick="(() => SetNbPersons(i))" class="dropdown-item">@i</button>
+                }
+            </div>
+        </div>
     </div>
     <button class="btn btn-custom">Rechercher</button>
 </div>
 
-@code { }
+@code {
+    bool isDropdownMenuVisible = false;
+    int nbPersons = 1;
+
+    string dropdownClass => isDropdownMenuVisible ? "show" : "";
+
+    void ToggleDropdownMenu()
+    {
+        isDropdownMenuVisible = !isDropdownMenuVisible;
+    }
+
+    void SetNbPersons(int value)
+    {
+        nbPersons = value;
+        ToggleDropdownMenu();
+    }
+}
