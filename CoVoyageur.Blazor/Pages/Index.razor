@@ -1,0 +1,252 @@
+﻿@page "/"
+
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+    }
+
+    .banner-container {
+        position: relative;
+        background-image: url('/banniere.png');
+        background-size: cover;
+        background-position: center;
+        height: 300px;
+    }
+
+    .search-bar {
+        position: absolute;
+        bottom: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: white;
+        padding: 1rem;
+        border-radius: 20px;
+        border: 1px solid #ccc;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: fit-content;
+    }
+
+    .input-group {
+        display: flex;
+        align-items: center;
+        margin-right: 10px;
+    }
+
+    .input-group-text, .form-control, .btn, .dropdown-menu {
+        border-radius: 0.2rem;
+    }
+
+    .input-group-text {
+        background-color: white;
+        border: none;
+    }
+
+    .form-control {
+        border: none;
+        padding: 0.5rem;
+        margin-left: 0.5rem;
+        box-shadow: none;
+    }
+
+        .form-control:focus {
+            box-shadow: none;
+        }
+
+    .btn-custom, .secondary-btn {
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .btn-custom {
+        background-color: #5F8575;
+        color: white;
+    }
+
+        .btn-custom:hover {
+            background-color: #506f5b;
+        }
+
+    .secondary-btn {
+        background-color: #2C3C5B;
+        color: white;
+    }
+
+        .secondary-btn:hover {
+            background-color: #25334a;
+        }
+
+    .highlight {
+        background-color: #5F8575;
+        color: white;
+        padding: 0.5rem;
+        border-radius: 4px;
+    }
+
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        background-color: white;
+        min-width: 100px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+    section {
+        background-color: #fff;
+        padding: 2rem;
+        margin: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    h1, h2 {
+        color: #333;
+    }
+
+    p {
+        color: #666;
+    }
+
+    img {
+        width: 100%;
+        max-width: 150px;
+        border-radius: 8px;
+        margin-top: 1rem;
+    }
+
+    footer {
+        background-color: #5F8575;
+        color: white;
+        padding: 1rem;
+        display: flex;
+        justify-content: space-around;
+    }
+
+        footer nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem;
+        }
+
+        footer img {
+            max-width: 100px;
+        }
+</style>
+
+
+<div class="banner-container">
+    <div class="search-bar">
+        <div class="input-group">
+            <InputText class="form-control" placeholder="Départ" @bind-Value="searchDeparture" />
+            <span class="input-group-text">
+                <i class="fa fa-map-marker-alt"></i>
+            </span>
+        </div>
+        <div class="input-group">
+            <InputText class="form-control" placeholder="Arrivée" @bind-Value="searchDestination" />
+            <span class="input-group-text">
+                <i class="fa fa-map-marker-alt"></i>
+            </span>
+        </div>
+        <div class="input-group">
+@*             <span class="input-group-text">
+                <i class="fa fa-calendar-alt"></i>
+            </span> *@
+            <input type="date" class="form-control" placeholder="jj/mm/aaaa" @bind="searchDate" />
+        </div>
+        <div class="input-group">
+            <InputNumber class="form-control" min="1" max="8" @bind-Value="selectedNumberOfPersons"></InputNumber>
+            <span class="input-group-text">
+                <i class="fa fa-user"></i>
+            </span>
+        </div>
+        <button class="btn btn-custom" @onclick="Search">Rechercher</button>
+    </div>
+</div>
+
+<main>
+    <!-- Section Offre de Bienvenue -->
+    <section class="welcome-offer" style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h1>Profitez de -20% sur vos 5 premiers voyages</h1>
+            <p>Rejoignez la communauté CoVoyageur maintenant et économisez sur vos premiers trajets. Ne ratez pas cette occasion unique !</p>
+            <button class="btn btn-custom">Découvrir</button>
+        </div>
+        <img src="https://via.placeholder.com/150" alt="Image de promotion CoVoyageur" style="order: 2;">
+    </section>
+
+    <!-- Section CoVoyageur Prime -->
+    <section class="prime-carpooling" style="display: flex; justify-content: space-between; align-items: center;">
+        <img src="https://via.placeholder.com/150" alt="Image de Prime Carpooling" style="order: -1;">
+        <div>
+            <h2>CoVoyageur Prime à 9.99€/mois</h2>
+            <p>Bénéficiez de réductions sur vos voyages et d'avantages exclusifs pour les conducteurs en rejoignant CoVoyageur Prime.</p>
+            <button class="btn btn-custom">En savoir plus</button>
+        </div>
+    </section>
+
+    <!-- Section Itinéraires Populaires  -->
+    <section class="popular-routes">
+        <h2>Itinéraires Populaires</h2>
+        <div>
+            <div>Ville A - Ville B</div>
+            <div>Ville C - Ville D</div>
+            <div>Ville E - Ville F</div>
+        </div>
+    </section>
+
+    <!-- Section CoVoyageur Bus -->
+    <section class="bus-section" style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h2>Découvrez les Grandes Villes et Aéroports avec CoVoyageur Bus</h2>
+            <p>Explorez les grandes villes et facilitez vos déplacements vers les aéroports grâce à notre service CoVoyageur Bus. Confort et commodité à votre service.</p>
+            <button class="btn btn-custom">Voir les bus</button>
+        </div>
+        <img src="https://via.placeholder.com/150" alt="Image de CoVoyageur Bus" style="order: 2;">
+    </section>
+
+    <!-- Section Conseils de Sécurité -->
+    <section class="safety-tips" style="display: flex; justify-content: space-between; align-items: center;">
+        <img src="https://via.placeholder.com/150" alt="Image de sécurité" style="order: -1;">
+        <div>
+            <h2>Engagement et Conseils pour votre Sécurité</h2>
+            <p>Priorisez votre sécurité lors de vos voyages avec nos conseils et directives. Voyagez en toute tranquillité d'esprit avec CoVoyageur.</p>
+            <button class="btn btn-custom">Lire les conseils</button>
+        </div>
+    </section>
+</main>
+
+
+
+<footer>
+    <nav>
+        <a href="#">À propos de Covoyage</a>
+        <a href="#">FAQ</a>
+        <a href="#">Contactez-nous</a>
+    </nav>
+    @* <img src="https://via.placeholder.com/150" alt="Logo de Covoyage"> *@
+</footer>
+
+@code {
+    private string searchDeparture;
+    private string searchDestination;
+    private DateTime? searchDate;
+    private int selectedNumberOfPersons = 1;
+
+    private void Search()
+    {
+
+    }
+}

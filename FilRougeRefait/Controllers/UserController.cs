@@ -1,7 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CoVoyageur.API.DTOs;
+using AutoMapper;
 using CoVoyageur.API.Data;
+using CoVoyageur.Core.Models;
+using NuGet.Protocol.Core.Types;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
+using CoVoyageur.API.Repositories.Interfaces;
 
 namespace CoVoyageur.API.Controllers
 {
@@ -9,111 +16,67 @@ namespace CoVoyageur.API.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IRepository<User> _repository;
+        private readonly IMapper _mapper;
 
-        public UserController(ApplicationDbContext context)
+        public UserController(IRepository<User> repository,
+                                IMapper mapper)
         {
-            _context = context;
+            _repository = repository;
+            _mapper = mapper;
         }
 
-        // GET: api/UserDTOes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserDTO>>> GetUserDTO()
+        public async Task<IActionResult> GetAll()
         {
-            if (_context.UserDTO == null)
-            {
-                return NotFound();
-            }
-            return await _context.UserDTO.ToListAsync();
+            IEnumerable<User> users = await _repository.GetAll();
+            IEnumerable<UserDTO> usersDTO = _mapper.Map<IEnumerable<UserDTO>>(users)!;
+            return Ok(usersDTO);
         }
 
-        // GET: api/UserDTOes/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserDTO>> GetUserDTO(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            if (_context.UserDTO == null)
-            {
-                return NotFound();
-            }
-            var userDTO = await _context.UserDTO.FindAsync(id);
+            var user = await _repository.GetById(id);
+            if (user == null)
+                return NotFound(new { Message = "There is no User with this Id." });
 
-            if (userDTO == null)
-            {
-                return NotFound();
-            }
-
-            return userDTO;
+            UserDTO userDTO = _mapper.Map<UserDTO>(user)!;
+            return Ok(new { Message = "User found.", User = userDTO });
         }
 
-        // PUT: api/UserDTOes/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUserDTO(int id, UserDTO userDTO)
+        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] UserDTO userDTO)
         {
-            if (id != userDTO.ID)
-            {
-                return BadRequest();
-            }
+            var userFromDb = await _repository.GetById(id);
+            if (userFromDb == null)
+                return NotFound("There is no User with this Id.");
 
-            _context.Entry(userDTO).State = EntityState.Modified;
+            userDTO.ID = id;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserDTOExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            var user = _mapper.Map<User>(userDTO)!;
+            var userUpdated = await _repository.Update(user);
+            var userUpdatedDTO = _mapper.Map<UserDTO>(userUpdated);
 
-            return NoContent();
+            return (userUpdated != null) ? Ok(new { Message = "User Updated.", User = userUpdatedDTO }) : BadRequest("Something went wrong...");
         }
 
-        // POST: api/UserDTOes
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<UserDTO>> PostUserDTO(UserDTO userDTO)
+        public async Task<IActionResult> Post([FromBody] UserDTO userDTO)
         {
-            if (_context.UserDTO == null)
-            {
-                return Problem("Entity set 'FilRougeRefaitContext.UserDTO'  is null.");
-            }
-            _context.UserDTO.Add(userDTO);
-            await _context.SaveChangesAsync();
+            var user = _mapper.Map<User>(userDTO)!;
+            var userAdded = await _repository.Add(user);
+            var userAddedDTO = _mapper.Map<UserDTO>(userAdded)!;
 
-            return CreatedAtAction("GetUserDTO", new { id = userDTO.ID }, userDTO);
+            return (userAdded != null) ? CreatedAtAction(nameof(GetById), new { id = userAddedDTO.ID }, new { Message = "User Added.", User = userAddedDTO }) : BadRequest("Something went wrong...");
         }
 
-        // DELETE: api/UserDTOes/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUserDTO(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (_context.UserDTO == null)
-            {
-                return NotFound();
-            }
-            var userDTO = await _context.UserDTO.FindAsync(id);
-            if (userDTO == null)
-            {
-                return NotFound();
-            }
-
-            _context.UserDTO.Remove(userDTO);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return (await _repository.Delete(id)) ? Ok("ok : user deleted") : BadRequest();
         }
 
-        private bool UserDTOExists(int id)
-        {
-            return (_context.UserDTO?.Any(e => e.ID == id)).GetValueOrDefault();
-        }
+
     }
 }

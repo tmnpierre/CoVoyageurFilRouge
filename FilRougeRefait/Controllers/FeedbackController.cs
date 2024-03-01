@@ -1,7 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CoVoyageur.API.DTOs;
+using AutoMapper;
 using CoVoyageur.API.Data;
+using CoVoyageur.Core.Models;
+using NuGet.Protocol.Core.Types;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
+using CoVoyageur.API.Repositories.Interfaces;
 
 namespace CoVoyageur.API.Controllers
 {
@@ -9,111 +16,67 @@ namespace CoVoyageur.API.Controllers
     [ApiController]
     public class FeedbackController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IRepository<Feedback> _repository;
+        private readonly IMapper _mapper;
 
-        public FeedbackController(ApplicationDbContext context)
+        public FeedbackController(IRepository<Feedback> repository,
+                                IMapper mapper)
         {
-            _context = context;
+            _repository = repository;
+            _mapper = mapper;
         }
 
-        // GET: api/FeedbackDTOes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<FeedbackDTO>>> GetFeedbackDTO()
+        public async Task<IActionResult> GetAll()
         {
-          if (_context.FeedbackDTO == null)
-          {
-              return NotFound();
-          }
-            return await _context.FeedbackDTO.ToListAsync();
+            IEnumerable<Feedback> feedbacks = await _repository.GetAll();
+            IEnumerable<FeedbackDTO> feedbacksDTO = _mapper.Map<IEnumerable<FeedbackDTO>>(feedbacks)!;
+            return Ok(feedbacksDTO);
         }
 
-        // GET: api/FeedbackDTOes/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<FeedbackDTO>> GetFeedbackDTO(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-          if (_context.FeedbackDTO == null)
-          {
-              return NotFound();
-          }
-            var feedbackDTO = await _context.FeedbackDTO.FindAsync(id);
+            var feedback = await _repository.GetById(id);
+            if (feedback == null)
+                return NotFound(new { Message = "There is no Feedback with this Id." });
 
-            if (feedbackDTO == null)
-            {
-                return NotFound();
-            }
-
-            return feedbackDTO;
+            FeedbackDTO feedbackDTO = _mapper.Map<FeedbackDTO>(feedback)!;
+            return Ok(new { Message = "Feedback found.", Feedback = feedbackDTO });
         }
 
-        // PUT: api/FeedbackDTOes/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutFeedbackDTO(int id, FeedbackDTO feedbackDTO)
+        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] FeedbackDTO feedbackDTO)
         {
-            if (id != feedbackDTO.ID)
-            {
-                return BadRequest();
-            }
+            var feedbackFromDb = await _repository.GetById(id);
+            if (feedbackFromDb == null)
+                return NotFound("There is no Feedback with this Id.");
 
-            _context.Entry(feedbackDTO).State = EntityState.Modified;
+            feedbackDTO.ID = id;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!FeedbackDTOExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            var feedback = _mapper.Map<Feedback>(feedbackDTO)!;
+            var feedbackUpdated = await _repository.Update(feedback);
+            var feedbackUpdatedDTO = _mapper.Map<FeedbackDTO>(feedbackUpdated);
 
-            return NoContent();
+            return (feedbackUpdated != null) ? Ok(new { Message = "Feedback Updated.", Feedback = feedbackUpdatedDTO }) : BadRequest("Something went wrong...");
         }
 
-        // POST: api/FeedbackDTOes
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<FeedbackDTO>> PostFeedbackDTO(FeedbackDTO feedbackDTO)
+        public async Task<IActionResult> Post([FromBody] FeedbackDTO feedbackDTO)
         {
-          if (_context.FeedbackDTO == null)
-          {
-              return Problem("Entity set 'FilRougeRefaitContext.FeedbackDTO'  is null.");
-          }
-            _context.FeedbackDTO.Add(feedbackDTO);
-            await _context.SaveChangesAsync();
+            var feedback = _mapper.Map<Feedback>(feedbackDTO)!;
+            var feedbackAdded = await _repository.Add(feedback);
+            var feedbackAddedDTO = _mapper.Map<FeedbackDTO>(feedbackAdded)!;
 
-            return CreatedAtAction("GetFeedbackDTO", new { id = feedbackDTO.ID }, feedbackDTO);
+            return (feedbackAdded != null) ? CreatedAtAction(nameof(GetById), new { id = feedbackAddedDTO.ID }, new { Message = "Feedback Added.", Feedback = feedbackAddedDTO }) : BadRequest("Something went wrong...");
         }
 
-        // DELETE: api/FeedbackDTOes/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteFeedbackDTO(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (_context.FeedbackDTO == null)
-            {
-                return NotFound();
-            }
-            var feedbackDTO = await _context.FeedbackDTO.FindAsync(id);
-            if (feedbackDTO == null)
-            {
-                return NotFound();
-            }
-
-            _context.FeedbackDTO.Remove(feedbackDTO);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return (await _repository.Delete(id)) ? Ok("ok : feedback deleted") : BadRequest();
         }
 
-        private bool FeedbackDTOExists(int id)
-        {
-            return (_context.FeedbackDTO?.Any(e => e.ID == id)).GetValueOrDefault();
-        }
+
     }
 }

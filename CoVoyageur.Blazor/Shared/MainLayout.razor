@@ -1,0 +1,32 @@
+﻿@inherits LayoutComponentBase
+
+<div class="page">
+    <main>
+        <div class="top-row px-4 d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <a href="#" class="btn" style="background-color: #5F8575; color: white; margin-right: 10px;">Covoiturage</a>
+                <a href="#" class="btn" style="background-color: #5F8575; color: white; margin-right: 10px;">Bus</a>
+                <a href="#" class="btn" style="background-color: #5F8575; color: white; margin-right: 10px;">Covoiturage du quotidien</a>
+            </div>
+
+            <div class="d-flex align-items-center">
+                <input type="search" placeholder="Rechercher" aria-label="Rechercher" class="form-control mr-2">
+                <a href="#" class="btn" style="background-color: #2C3C5B; color: white; margin-right: 10px;">Proposer un trajet</a>
+            </div>
+
+            <!-- Dropdown  -->
+            <div class="dropdown">
+                <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color: #2C3C5B; color: white;">
+                    Compte
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <!-- liens du menu -->
+                </div>
+            </div>
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
