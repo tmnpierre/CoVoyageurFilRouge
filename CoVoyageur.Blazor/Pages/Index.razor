@@ -1,50 +1,98 @@
 ﻿@page "/"
 
-<div class="container mt-3">
-    <div class="text-center">
-        <img src="path_to_your_logo/logo.png" alt="CoVoyageur Logo" class="mb-4" />
-    </div>
+<style>
+    .btn-custom {
+        background-color: #0AC5A8;
+        border-color: #0AC5A8;
+        color: white;
+    }
 
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">Conducteur</div>
-                <div class="card-body">
-                    <p>Proposez un trajet et économisez sur vos frais de déplacement.</p>
-                    <a href="conducteur" class="btn btn-primary">Proposer un trajet</a>
-                </div>
-            </div>
-        </div>
+        .btn-custom:hover {
+            background-color: #07a896;
+            border-color: #07a896;
+        }
 
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">Passager</div>
-                <div class="card-body">
-                    <p>Trouvez un trajet et voyagez à moindre coût.</p>
-                    <a href="passager" class="btn btn-primary">Trouver un trajet</a>
-                </div>
-            </div>
-        </div>
-    </div>
+    .secondary-btn {
+        background-color: #2C3C5B;
+        border-color: #2C3C5B;
+        color: white;
+    }
 
-    <div class="mt-4">
-        <h2>Recherchez votre voyage</h2>
-        <form>
-            <div class="form-row">
-                <div class="form-group col-md-4">
-                    <label for="depart">Ville de départ</label>
-                    <input type="text" class="form-control" id="depart" placeholder="Ville de départ">
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="arrivee">Ville d'arrivée</label>
-                    <input type="text" class="form-control" id="arrivee" placeholder="Ville d'arrivée">
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="date">Date</label>
-                    <input type="date" class="form-control" id="date">
-                </div>
-            </div>
-            <button type="submit" class="btn btn-success">Rechercher</button>
-        </form>
+        .secondary-btn:hover {
+            background-color: #25334a;
+            border-color: #25334a;
+        }
+
+    .search-bar {
+        background-color: white;
+        border-radius: 20px;
+        border: 1px solid #ccc;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .input-group-text {
+        background-color: white;
+        border: none;
+        border-radius: 0.2rem;
+    }
+
+    .form-control, .custom-select {
+        border: none;
+        border-radius: 0.2rem;
+    }
+
+        .form-control:focus, .custom-select:focus {
+            box-shadow: none;
+        }
+
+    .highlight {
+        background-color: #0AC5A8;
+        color: white;
+        padding: 0.5rem;
+        border-radius: 4px;
+    }
+
+    .input-group .fa {
+        width: 2.5rem;
+        text-align: center;
+    }
+</style>
+
+<div class="search-bar px-3 py-2 d-flex align-items-center">
+    <div class="input-group mr-2">
+        <span class="input-group-text">
+            <i class="fa fa-map-marker-alt"></i>
+        </span>
+        <input type="text" class="form-control" placeholder="Départ" aria-label="Départ">
     </div>
+    <div class="input-group mr-2">
+        <span class="input-group-text">
+            <i class="fa fa-map-marker-alt"></i>
+        </span>
+        <input type="text" class="form-control" placeholder="Destination" aria-label="Destination">
+    </div>
+    <div class="input-group mr-2">
+        <span class="input-group-text">
+            <i class="fa fa-calendar-alt"></i>
+        </span>
+        <input type="date" class="form-control" aria-label="Date du voyage">
+    </div>
+    <div class="input-group mr-2">
+        <span class="input-group-text">
+            <i class="fa fa-user"></i>
+        </span>
+        <select class="custom-select" aria-label="Nombre de personnes">
+            <option selected>1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+        </select>
+    </div>
+    <button class="btn btn-custom">Rechercher</button>
 </div>
+
+@code { }
