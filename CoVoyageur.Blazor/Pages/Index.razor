@@ -1,98 +1,223 @@
 ﻿@page "/"
 
 <style>
-    .btn-custom {
-        background-color: #0AC5A8;
-        border-color: #0AC5A8;
-        color: white;
+    body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
     }
-
-        .btn-custom:hover {
-            background-color: #07a896;
-            border-color: #07a896;
-        }
-
-    .secondary-btn {
-        background-color: #2C3C5B;
-        border-color: #2C3C5B;
-        color: white;
-    }
-
-        .secondary-btn:hover {
-            background-color: #25334a;
-            border-color: #25334a;
-        }
 
     .search-bar {
         background-color: white;
+        padding: 1rem;
+        margin: 1rem auto;
         border-radius: 20px;
         border: 1px solid #ccc;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: fit-content;
+    }
+
+    .input-group {
+        display: flex;
+        align-items: center;
+        margin-right: 10px;
+    }
+
+    .input-group-text, .form-control, .btn, .dropdown-menu {
+        border-radius: 0.2rem;
     }
 
     .input-group-text {
         background-color: white;
         border: none;
-        border-radius: 0.2rem;
     }
 
-    .form-control, .custom-select {
+    .form-control {
         border: none;
-        border-radius: 0.2rem;
+        padding: 0.5rem;
+        margin-left: 0.5rem;
+        box-shadow: none;
     }
 
-        .form-control:focus, .custom-select:focus {
+        .form-control:focus {
             box-shadow: none;
         }
 
+    .btn-custom, .secondary-btn {
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .btn-custom {
+        background-color: #5F8575;
+        color: white;
+    }
+
+        .btn-custom:hover {
+            background-color: #506f5b;
+        }
+
+    .secondary-btn {
+        background-color: #2C3C5B;
+        color: white;
+    }
+
+        .secondary-btn:hover {
+            background-color: #25334a;
+        }
+
     .highlight {
-        background-color: #0AC5A8;
+        background-color: #5F8575;
         color: white;
         padding: 0.5rem;
         border-radius: 4px;
     }
 
-    .input-group .fa {
-        width: 2.5rem;
-        text-align: center;
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        background-color: white;
+        min-width: 100px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
     }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+    section {
+        background-color: #fff;
+        padding: 2rem;
+        margin: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    h1, h2 {
+        color: #333;
+    }
+
+    p {
+        color: #666;
+    }
+
+    img {
+        width: 100%;
+        max-width: 150px;
+        border-radius: 8px;
+        margin-top: 1rem;
+    }
+
+    footer {
+        background-color: #5F8575;
+        color: white;
+        padding: 1rem;
+        display: flex;
+        justify-content: space-around;
+    }
+
+        footer nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem;
+        }
+
+        footer img {
+            max-width: 100px;
+        }
 </style>
 
-<div class="search-bar px-3 py-2 d-flex align-items-center">
-    <div class="input-group mr-2">
+<div class="search-bar">
+    <div class="input-group">
         <span class="input-group-text">
             <i class="fa fa-map-marker-alt"></i>
         </span>
-        <input type="text" class="form-control" placeholder="Départ" aria-label="Départ">
+        <InputText class="form-control" placeholder="Départ" @bind-Value="searchDeparture" />
     </div>
-    <div class="input-group mr-2">
+    <div class="input-group">
         <span class="input-group-text">
             <i class="fa fa-map-marker-alt"></i>
         </span>
-        <input type="text" class="form-control" placeholder="Destination" aria-label="Destination">
+        <InputText class="form-control" placeholder="Destination" @bind-Value="searchDestination" />
     </div>
-    <div class="input-group mr-2">
+    <div class="input-group">
         <span class="input-group-text">
             <i class="fa fa-calendar-alt"></i>
         </span>
-        <input type="date" class="form-control" aria-label="Date du voyage">
+        <input type="string" class="form-control"  placeholder="jj/mm/aaaa" @bind="searchDate" />
     </div>
-    <div class="input-group mr-2">
+    <div class="input-group">
         <span class="input-group-text">
             <i class="fa fa-user"></i>
         </span>
-        <select class="custom-select" aria-label="Nombre de personnes">
-            <option selected>1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-        </select>
+        <InputNumber class="form-control" max="8" @bind-Value="selectedNumberOfPersons"></InputNumber>
     </div>
-    <button class="btn btn-custom">Rechercher</button>
+    <button class="btn btn-custom" @onclick="Search">Rechercher</button>
 </div>
 
-@code { }
+<main>
+    <section class="welcome-offer">
+        <h1>Bienvenue sur CoVoyage</h1>
+        <p>Rejoignez la communauté CoVoyage et profitez des trajets à petits prix.</p>
+        <button class="btn btn-custom">Découvrir</button>
+        <img src="https://via.placeholder.com/150" alt="Image de Covoyage">
+    </section>
+
+    <section class="prime-carpooling">
+        <h2>Covoyage Prime</h2>
+        <p>Profitez de nos meilleures offres et récompenses avec CoVoyage Prime.</p>
+        <button class="btn btn-custom">En savoir plus</button>
+        <img src="https://via.placeholder.com/150" alt="Image de Prime Carpooling">
+    </section>
+
+    <section class="popular-routes">
+        <h2>Itinéraires Populaires</h2>
+        <div>
+            <div>Ville A - Ville B @* <img src="https://via.placeholder.com/150" alt="Image d'itinéraire"> *@</div>
+            <div>Ville C - Ville D @* <img src="https://via.placeholder.com/150" alt="Image d'itinéraire"> *@</div>
+            <div>Ville E - Ville F @* <img src="https://via.placeholder.com/150" alt="Image d'itinéraire"> *@</div>
+        </div>
+    </section>
+
+    <section class="bus-section">
+        <h2>Covoyage Bus</h2>
+        <p>Découvrez les villes avec le confort et la commodité de Covoyage Bus.</p>
+        <button class="btn btn-custom">Voir les bus</button>
+        <img src="https://via.placeholder.com/150" alt="Image de Covoyage Bus">
+    </section>
+
+    <section class="safety-tips">
+        <h2>Conseils de Sécurité</h2>
+        <p>Soyez en sécurité lors de vos voyages avec nos conseils et directives.</p>
+        <button class="btn btn-custom">Lire les conseils</button>
+        <img src="https://via.placeholder.com/150" alt="Image de sécurité">
+    </section>
+</main>
+
+<footer>
+    <nav>
+        <a href="#">À propos de Covoyage</a>
+        <a href="#">FAQ</a>
+        <a href="#">Contactez-nous</a>
+    </nav>
+    @* <img src="https://via.placeholder.com/150" alt="Logo de Covoyage"> *@
+</footer>
+
+@code {
+    private string searchDeparture;
+    private string searchDestination;
+    private DateTime? searchDate;
+    private int selectedNumberOfPersons = 1;
+
+    private void Search()
+    {
+        
+    }
+}
