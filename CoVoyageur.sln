@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoVoyageur.Core", "CoVoyage
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoVoyageur.Test", "CoVoyageur.Test\CoVoyageur.Test.csproj", "{EB887B01-EAD0-4C71-BF26-3C5E2C81FE4F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoVoyageur.Blazor", "CoVoyageur.Blazor\CoVoyageur.Blazor.csproj", "{50691A69-123D-4CB6-BDB4-F8DEF5A10200}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoVoyageur.Blazor", "CoVoyageur.Blazor\CoVoyageur.Blazor.csproj", "{50691A69-123D-4CB6-BDB4-F8DEF5A10200}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

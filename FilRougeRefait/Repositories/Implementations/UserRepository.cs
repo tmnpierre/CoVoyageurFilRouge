@@ -34,7 +34,10 @@ namespace CoVoyageur.API.Repositories.Implementations
         {
             return await _db.Users.FirstOrDefaultAsync(predicate); //fait
         }
-
+        Task<int?> IRepository<User>.Add(User entity)
+        {
+            throw new NotImplementedException();
+        }
         public async Task<User?> Add(User usr)
         {
             var added = await _db.Users.AddAsync(usr); //fait
@@ -101,5 +104,7 @@ namespace CoVoyageur.API.Repositories.Implementations
             _db.Users.Remove(user);
             return await _db.SaveChangesAsync() > 0;
         }
+
+        
     }
 }
