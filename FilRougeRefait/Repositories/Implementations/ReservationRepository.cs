@@ -48,5 +48,10 @@ namespace CoVoyageur.API.Repositories.Implementations
         {
             throw new NotImplementedException();
         }
+
+        Task<int?> IRepository<Reservation>.Add(Reservation entity)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

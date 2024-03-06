@@ -34,7 +34,7 @@ namespace CoVoyageur.API.Repositories.Implementations
             throw new NotImplementedException();
         }
 
-        public Task<Ride?> Add(Ride entity)
+        Task<int?> IRepository<Ride>.Add(Ride entity)
         {
             throw new NotImplementedException();
         }
@@ -48,5 +48,6 @@ namespace CoVoyageur.API.Repositories.Implementations
         {
             throw new NotImplementedException();
         }
+
     }
 }

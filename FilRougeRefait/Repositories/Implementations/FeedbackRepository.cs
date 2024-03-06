@@ -48,5 +48,10 @@ namespace CoVoyageur.API.Repositories.Implementations
         {
             throw new NotImplementedException();
         }
+
+        Task<int?> IRepository<Feedback>.Add(Feedback entity)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
