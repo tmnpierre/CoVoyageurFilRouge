@@ -13,12 +13,12 @@
         background-image: url('/banniere.png');
         background-size: cover;
         background-position: center;
-        height: 300px; 
+        height: 300px;
     }
 
     .search-bar {
         position: absolute;
-        bottom: -30px; 
+        bottom: -30px;
         left: 50%;
         transform: translateX(-50%);
         background-color: white;
@@ -30,19 +30,6 @@
         justify-content: space-between;
         align-items: center;
         width: fit-content;
-    }
-
-    welcome-offer {
-        margin-top: 50000px
-    }
-
-    main section {
-        margin-top: 50px;
-        background-color: #fff;
-        padding: 2rem;
-        margin: 1rem auto; 
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     .input-group {
@@ -156,8 +143,8 @@
         footer img {
             max-width: 100px;
         }
-
 </style>
+
 
 <div class="banner-container">
     <div class="search-bar">
@@ -180,7 +167,7 @@
             <input type="date" class="form-control" placeholder="jj/mm/aaaa" @bind="searchDate" />
         </div>
         <div class="input-group">
-            <InputNumber class="form-control" max="8" @bind-Value="selectedNumberOfPersons"></InputNumber>
+            <InputNumber class="form-control" min="1" max="8" @bind-Value="selectedNumberOfPersons"></InputNumber>
             <span class="input-group-text">
                 <i class="fa fa-user"></i>
             </span>
@@ -190,43 +177,58 @@
 </div>
 
 <main>
-    <section class="welcome-offer">
-        <h1>Bienvenue sur CoVoyage</h1>
-        <p>Rejoignez la communauté CoVoyage et profitez des trajets à petits prix.</p>
-        <button class="btn btn-custom">Découvrir</button>
-        <img src="https://via.placeholder.com/150" alt="Image de Covoyage">
-    </section>
-
-    <section class="prime-carpooling">
-        <h2>Covoyage Prime</h2>
-        <p>Profitez de nos meilleures offres et récompenses avec CoVoyage Prime.</p>
-        <button class="btn btn-custom">En savoir plus</button>
-        <img src="https://via.placeholder.com/150" alt="Image de Prime Carpooling">
-    </section>
-
-    <section class="popular-routes">
-        <h2>Itinéraires Populaires</h2>
+    <!-- Section Offre de Bienvenue -->
+    <section class="welcome-offer" style="display: flex; justify-content: space-between; align-items: center;">
         <div>
-            <div>Ville A - Ville B @* <img src="https://via.placeholder.com/150" alt="Image d'itinéraire"> *@</div>
-            <div>Ville C - Ville D @* <img src="https://via.placeholder.com/150" alt="Image d'itinéraire"> *@</div>
-            <div>Ville E - Ville F @* <img src="https://via.placeholder.com/150" alt="Image d'itinéraire"> *@</div>
+            <h1>Profitez de -20% sur vos 5 premiers voyages</h1>
+            <p>Rejoignez la communauté CoVoyageur maintenant et économisez sur vos premiers trajets. Ne ratez pas cette occasion unique !</p>
+            <button class="btn btn-custom">Découvrir</button>
+        </div>
+        <img src="https://via.placeholder.com/150" alt="Image de promotion CoVoyageur" style="order: 2;">
+    </section>
+
+    <!-- Section CoVoyageur Prime -->
+    <section class="prime-carpooling" style="display: flex; justify-content: space-between; align-items: center;">
+        <img src="https://via.placeholder.com/150" alt="Image de Prime Carpooling" style="order: -1;">
+        <div>
+            <h2>CoVoyageur Prime à 9.99€/mois</h2>
+            <p>Bénéficiez de réductions sur vos voyages et d'avantages exclusifs pour les conducteurs en rejoignant CoVoyageur Prime.</p>
+            <button class="btn btn-custom">En savoir plus</button>
         </div>
     </section>
 
-    <section class="bus-section">
-        <h2>Covoyage Bus</h2>
-        <p>Découvrez les villes avec le confort et la commodité de Covoyage Bus.</p>
-        <button class="btn btn-custom">Voir les bus</button>
-        <img src="https://via.placeholder.com/150" alt="Image de Covoyage Bus">
+    <!-- Section Itinéraires Populaires  -->
+    <section class="popular-routes">
+        <h2>Itinéraires Populaires</h2>
+        <div>
+            <div>Ville A - Ville B</div>
+            <div>Ville C - Ville D</div>
+            <div>Ville E - Ville F</div>
+        </div>
     </section>
 
-    <section class="safety-tips">
-        <h2>Conseils de Sécurité</h2>
-        <p>Soyez en sécurité lors de vos voyages avec nos conseils et directives.</p>
-        <button class="btn btn-custom">Lire les conseils</button>
-        <img src="https://via.placeholder.com/150" alt="Image de sécurité">
+    <!-- Section CoVoyageur Bus -->
+    <section class="bus-section" style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h2>Découvrez les Grandes Villes et Aéroports avec CoVoyageur Bus</h2>
+            <p>Explorez les grandes villes et facilitez vos déplacements vers les aéroports grâce à notre service CoVoyageur Bus. Confort et commodité à votre service.</p>
+            <button class="btn btn-custom">Voir les bus</button>
+        </div>
+        <img src="https://via.placeholder.com/150" alt="Image de CoVoyageur Bus" style="order: 2;">
+    </section>
+
+    <!-- Section Conseils de Sécurité -->
+    <section class="safety-tips" style="display: flex; justify-content: space-between; align-items: center;">
+        <img src="https://via.placeholder.com/150" alt="Image de sécurité" style="order: -1;">
+        <div>
+            <h2>Engagement et Conseils pour votre Sécurité</h2>
+            <p>Priorisez votre sécurité lors de vos voyages avec nos conseils et directives. Voyagez en toute tranquillité d'esprit avec CoVoyageur.</p>
+            <button class="btn btn-custom">Lire les conseils</button>
+        </div>
     </section>
 </main>
+
+
 
 <footer>
     <nav>
