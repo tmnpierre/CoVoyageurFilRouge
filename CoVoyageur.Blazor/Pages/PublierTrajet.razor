@@ -1,78 +1,28 @@
 ﻿@page "/publier-trajet"
 
-<style>
-    body {
-        font-family: 'Arial', sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #f4f4f4;
-    }
-
-    .container {
-        background-color: #5F8575;
-        padding: 2rem;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        margin: 1rem auto;
-        max-width: 100%; /* Étendre la largeur à 100% */
-        display: flex;
-        justify-content: space-between; /* Répartir les éléments horizontalement */
-        align-items: center; /* Centrer les éléments verticalement */
-    }
-
-    .label {
-        color: white;
-        font-weight: bold;
-        margin-right: 1rem; /* Espacement entre les étiquettes et les champs de saisie */
-    }
-
-    input[type="text"],
-    input[type="datetime-local"] {
-        padding: 0.5rem;
-        margin-bottom: 1rem; /* Espacement entre les champs de saisie */
-        width: calc(33.33% - 1rem); /* Largeur des champs de saisie */
-        border: none;
-        border-radius: 4px;
-    }
-
-    input[type="datetime-local"] {
-        padding: 0.5rem;
-    }
-
-    .submit-button {
-        background-color: white;
-        color: #5F8575;
-        padding: 0.5rem 1rem;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-
-        .submit-button:hover {
-            background-color: #e0e0e0;
-        }
-</style>
-
-<h1 style="text-align: center;">Publier un trajet</h1>
+<head>
+    
+    <link rel="stylesheet" href="css/PublierTrajet.css" />
+</head>
 
 <div class="container">
-    <div class="form-group">
-        <label class="label" for="departure">Départ :</label>
-        <input id="departure" @bind="DepartureLocation" type="text" />
-    </div>
-
-    <div class="form-group">
-        <label class="label" for="destination">Destination :</label>
-        <input id="destination" @bind="DestinationLocation" type="text" />
-    </div>
-
-    <div class="form-group">
-        <label class="label" for="departure-time">Heure de départ :</label>
-        <input id="departure-time" type="datetime-local" @bind="DepartureTime" />
-    </div>
+    <h1 class="title">Publier un trajet</h1>
+    <form>
+        <div class="form-group">
+            <label class="label" for="departure">Départ :</label>
+            <input id="departure" @bind="DepartureLocation" type="text" placeholder="Entrez le lieu de départ" required />
+        </div>
+        <div class="form-group">
+            <label class="label" for="destination">Destination :</label>
+            <input id="destination" @bind="DestinationLocation" type="text" placeholder="Entrez la destination" required />
+        </div>
+        <div class="form-group">
+            <label class="label" for="departure-time">Heure de départ :</label>
+            <input id="departure-time" type="datetime-local" @bind="DepartureTime" required />
+        </div>
+        <button type="submit" class="submit-button" @onclick:prevent="PublishTrip">Publier</button>
+    </form>
 </div>
-
-<button class="submit-button" @onclick="PublishTrip">Publier</button>
 
 @code {
     // Properties for form inputs
