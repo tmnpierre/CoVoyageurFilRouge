@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BlazorStrap" Version="5.1.102.51923" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.15" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.15" PrivateAssets="all" />
     <PackageReference Include="MudBlazor" Version="6.16.0" />

@@ -1,150 +1,8 @@
 ﻿@page "/"
 
-<style>
-    body {
-        font-family: 'Arial', sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #f4f4f4;
-    }
-
-    .banner-container {
-        position: relative;
-        background-image: url('/banniere.png');
-        background-size: cover;
-        background-position: center;
-        height: 300px;
-    }
-
-    .search-bar {
-        position: absolute;
-        bottom: -30px;
-        left: 50%;
-        transform: translateX(-50%);
-        background-color: white;
-        padding: 1rem;
-        border-radius: 20px;
-        border: 1px solid #ccc;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: fit-content;
-    }
-
-    .input-group {
-        display: flex;
-        align-items: center;
-        margin-right: 10px;
-    }
-
-    .input-group-text, .form-control, .btn, .dropdown-menu {
-        border-radius: 0.2rem;
-    }
-
-    .input-group-text {
-        background-color: white;
-        border: none;
-    }
-
-    .form-control {
-        border: none;
-        padding: 0.5rem;
-        margin-left: 0.5rem;
-        box-shadow: none;
-    }
-
-        .form-control:focus {
-            box-shadow: none;
-        }
-
-    .btn-custom, .secondary-btn {
-        border: none;
-        padding: 0.5rem 1rem;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-
-    .btn-custom {
-        background-color: #5F8575;
-        color: white;
-    }
-
-        .btn-custom:hover {
-            background-color: #506f5b;
-        }
-
-    .secondary-btn {
-        background-color: #2C3C5B;
-        color: white;
-    }
-
-        .secondary-btn:hover {
-            background-color: #25334a;
-        }
-
-    .highlight {
-        background-color: #5F8575;
-        color: white;
-        padding: 0.5rem;
-        border-radius: 4px;
-    }
-
-    .dropdown-menu {
-        display: none;
-        position: absolute;
-        background-color: white;
-        min-width: 100px;
-        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-        z-index: 1;
-    }
-
-        .dropdown-menu.show {
-            display: block;
-        }
-
-    section {
-        background-color: #fff;
-        padding: 2rem;
-        margin: 1rem;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    h1, h2 {
-        color: #333;
-    }
-
-    p {
-        color: #666;
-    }
-
-    img {
-        width: 100%;
-        max-width: 150px;
-        border-radius: 8px;
-        margin-top: 1rem;
-    }
-
-    footer {
-        background-color: #5F8575;
-        color: white;
-        padding: 1rem;
-        display: flex;
-        justify-content: space-around;
-    }
-
-        footer nav a {
-            color: white;
-            text-decoration: none;
-            padding: 0.5rem;
-        }
-
-        footer img {
-            max-width: 100px;
-        }
-</style>
-
+<head>
+    <link rel="stylesheet" href="css/index.css" />
+</head>
 
 <div class="banner-container">
     <div class="search-bar">
@@ -161,9 +19,6 @@
             </span>
         </div>
         <div class="input-group">
-@*             <span class="input-group-text">
-                <i class="fa fa-calendar-alt"></i>
-            </span> *@
             <input type="date" class="form-control" placeholder="jj/mm/aaaa" @bind="searchDate" />
         </div>
         <div class="input-group">
@@ -199,11 +54,34 @@
 
     <!-- Section Itinéraires Populaires  -->
     <section class="popular-routes">
-        <h2>Itinéraires Populaires</h2>
-        <div>
-            <div>Ville A - Ville B</div>
-            <div>Ville C - Ville D</div>
-            <div>Ville E - Ville F</div>
+        <div class="container">
+            <h2>Itinéraires Populaires</h2>
+            <div class="row">
+                <div class="col-md-3">
+                    <div>
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>Paris - Marseille</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div>
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>Lyon - Bordeaux</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div>
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>Lille - Nantes</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div>
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>Toulouse - Nice</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -226,9 +104,8 @@
             <button class="btn btn-custom">Lire les conseils</button>
         </div>
     </section>
+
 </main>
-
-
 
 <footer>
     <nav>
@@ -236,7 +113,6 @@
         <a href="#">FAQ</a>
         <a href="#">Contactez-nous</a>
     </nav>
-    @* <img src="https://via.placeholder.com/150" alt="Logo de Covoyage"> *@
 </footer>
 
 @code {
