@@ -1,5 +1,4 @@
-﻿/* General styles */
-body {
+﻿body {
     font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
@@ -25,7 +24,6 @@ body {
     margin-bottom: 2rem;
 }
 
-/* Form styles */
 form {
     display: flex;
     flex-direction: column;
@@ -61,7 +59,6 @@ input[type="datetime-local"] {
         box-shadow: 0 0 5px #5F8575;
     }
 
-/* Submit button styles */
 .submit-button {
     background-color: #5F8575;
     color: white;

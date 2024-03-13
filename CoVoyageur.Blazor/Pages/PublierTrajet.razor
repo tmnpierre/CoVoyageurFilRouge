@@ -25,23 +25,18 @@
 </div>
 
 @code {
-    // Properties for form inputs
     private string DepartureLocation { get; set; }
     private string DestinationLocation { get; set; }
     private DateTime DepartureTime { get; set; }
 
-    // Method to publish the trip
     private void PublishTrip()
     {
-        // Example logic to handle publishing the trip
         if (!string.IsNullOrWhiteSpace(DepartureLocation) && !string.IsNullOrWhiteSpace(DestinationLocation))
         {
-            // Here you can perform actions like saving the trip to a database or triggering other processes
             Console.WriteLine($"Trajet publié : Départ de {DepartureLocation} à destination de {DestinationLocation} à {DepartureTime}");
         }
         else
         {
-            // Handle invalid input or display error messages
             Console.WriteLine("Veuillez remplir tous les champs.");
         }
     }
