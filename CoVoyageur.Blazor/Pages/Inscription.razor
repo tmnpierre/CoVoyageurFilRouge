@@ -1,0 +1,57 @@
+﻿@* @page "/inscription"
+@using CoVoyageur.API.DTO
+@using Microsoft.AspNetCore.Components.Forms
+
+
+@inject HttpClient Http
+<head>
+    ...
+    <link href="Inscription.css" rel="stylesheet" />
+    ...
+</head>
+
+<EditForm Model="@userDTO" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="lastName">Nom de famille :</label>
+        <InputText id="lastName" @bind-Value="userDTO.LastName" class="form-control" />
+        <ValidationMessage For="@(() => userDTO.LastName)" />
+    </div>
+
+    <div class="form-group">
+        <label for="firstName">Prénom :</label>
+        <InputText id="firstName" @bind-Value="userDTO.FirstName" class="form-control" />
+        <ValidationMessage For="@(() => userDTO.FirstName)" />
+    </div>
+
+    <div class="form-group">
+        <label for="email">Email :</label>
+        <InputText id="email" @bind-Value="userDTO.Email" type="email" class="form-control" />
+        <ValidationMessage For="@(() => userDTO.Email)" />
+    </div>
+
+    <div class="form-group">
+        <label for="birthDate">Date de naissance :</label>
+        <InputDate id="birthDate" @bind-Value="userDTO.BirthDate" class="form-control" />
+        <ValidationMessage For="@(() => userDTO.BirthDate)" />
+    </div>
+
+    <div class="form-group">
+        <label for="drivingLicense">Permis de conduire :</label>
+        <InputCheckbox id="drivingLicense" @bind-Value="userDTO.DrivingLicense" class="form-check-input" />
+    </div>
+
+    <div class="form-group">
+        <label for="password">Mot de passe :</label>
+        <InputText id="password" @bind-Value="userDTO.Password" type="password" class="form-control" />
+        <ValidationMessage For="@(() => userDTO.Password)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Enregistrer</button>
+</EditForm>
+
+@code
+
+} *@
